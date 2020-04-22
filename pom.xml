@@ -6,7 +6,7 @@
 
     <groupId>com.byteark</groupId>
     <artifactId>byteark-sdk-java</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0-SNAPSHOT</version>
 
     <properties>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
