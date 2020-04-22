@@ -13,7 +13,8 @@
 ## Installation
 
 For java 8+, You may install this SDK via [Maven](http://maven.apache.org/)
-       
+
+```xml       
     <repositories>
         <repository>
             <id>jitpack.io</id> 
@@ -27,6 +28,7 @@ For java 8+, You may install this SDK via [Maven](http://maven.apache.org/)
         <artifactId>byteark-sdk-java</artifactId>
         <version>0.1.0</version>
     </dependency>
+```
 
 ## Usages
 
