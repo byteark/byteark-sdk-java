@@ -1,6 +1,7 @@
 # ByteArk SDK for java
 
 ![Maven Package](https://github.com/byteark/byteark-sdk-java/workflows/Maven%20Package/badge.svg)
+[![](https://jitpack.io/v/byteark/byteark-sdk-java.svg)](https://jitpack.io/#byteark/byteark-sdk-java)
 
 ## Table of Contents
 
@@ -12,11 +13,19 @@
 ## Installation
 
 For java 8+, You may install this SDK via [Maven](http://maven.apache.org/)
-
+       
+    <repositories>
+        <repository>
+            <id>jitpack.io</id> 
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    ...
+    
     <dependency>
-      <groupId>com.byteark</groupId>
-      <artifactId>byteark-sdk-java</artifactId>
-      <version>0.1.0</version>
+        <groupId>com.github.byteark</groupId>
+        <artifactId>byteark-sdk-java</artifactId>
+        <version>0.1.0</version>
     </dependency>
 
 ## Usages
