@@ -1,6 +1,5 @@
 package com.byteark;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
@@ -28,7 +27,7 @@ class ByteArkV2UrlSignerTest {
     }
 
     @Test
-    void sign2() {
+    void signHLS() {
         ByteArkV2UrlSigner signer = new ByteArkV2UrlSigner.Builder()
                 .withAccessId("2Aj6Wkge4hi1ZYLp0DBG")
                 .withAccessSecret("31sX5C0lcBiWuGPTzRszYvjxzzI3aCZjJi85ZyB7")
