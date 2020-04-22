@@ -4,6 +4,14 @@
 name: Maven Package
 
 on:
+  push:
+    branches:
+      - master
+      - development
+  pull_request:
+    branches:
+      - master
+      - development
   release:
     types: [created]
 
