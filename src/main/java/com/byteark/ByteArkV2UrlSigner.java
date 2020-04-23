@@ -156,7 +156,8 @@ public class ByteArkV2UrlSigner {
     }
 
     private boolean shouldOptionValueExistsInQuery(Map.Entry<String, String> entry) {
-        return entry.getKey().equals("path_prefix");
+        String key = entry.getKey();
+        return key.equals("path_prefix") || key.equals("geo_allow");
     }
 
     private boolean shouldOptionExistsInQuery(Map.Entry<String, String> entry) {
