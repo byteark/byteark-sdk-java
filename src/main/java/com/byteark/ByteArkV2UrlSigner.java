@@ -37,10 +37,18 @@ public class ByteArkV2UrlSigner {
         if (expires <= 0) {
             expires = System.currentTimeMillis() / 1000 + defaultAge;
         }
-        if (options==null) {
-            options = new HashMap<>();
+
+        URL parsedUrl;
+        try {
+            parsedUrl = new URL(url);
+        } catch (MalformedURLException e) {
+            throw  new RuntimeException(e);
         }
-        String queryString = makeQueryParams(url, expires, makeCanonicalOptions(options));
+        String queryString = makeSignedQueryParams(
+                parsedUrl.getHost(),
+                parsedUrl.getPath(),
+                expires,
+                options);
         return url + "?" + queryString;
     }
 
@@ -56,7 +64,6 @@ public class ByteArkV2UrlSigner {
 
         URL parsedUrl = new URL(url);
         String path = parsedUrl.getPath();
-        String parsedUrlWithoutQuery = url.substring(0, url.indexOf('?'));
         Map<String, String> parsedQuery = UrlHelper.splitQuery(parsedUrl);
 
 
@@ -87,7 +94,8 @@ public class ByteArkV2UrlSigner {
                         e.getValue());
             });
         String expectedSignature = this.makeSignature(
-                parsedUrlWithoutQuery,
+                parsedUrl.getHost(),
+                parsedUrl.getPath(),
                 parsedExpires,
                 options
         );
@@ -105,12 +113,17 @@ public class ByteArkV2UrlSigner {
                 && !key.equals("x_ark_signature");
     }
 
-    String makeQueryParams(String url, long expires, Map<String, String> options) {
+    public String makeSignedQueryParams(String host, String path, long expires, Map<String, String> options) {
+        if (options==null) {
+            options = new HashMap<>();
+        } else {
+            options = makeCanonicalOptions(options);
+        }
         SortedMap<String, String> queryParams = new TreeMap<>();
         queryParams.put("x_ark_access_id", accessId);
         queryParams.put("x_ark_auth_type", "ark-v2");
         queryParams.put("x_ark_expires", String.valueOf(expires));
-        queryParams.put("x_ark_signature", this.makeSignature(url, expires, options));
+        queryParams.put("x_ark_signature", this.makeSignature(host, path, expires, options));
 
         options.entrySet()
                 .stream()
@@ -150,9 +163,12 @@ public class ByteArkV2UrlSigner {
         return !entry.getKey().equals("method");
     }
 
-    String makeSignature(String url, long expires, Map<String, String> options) {
+    private String makeSignature(String host,
+                         String path,
+                         long expires,
+                         Map<String, String> options) {
         try {
-            String stringToSign = makeStringToSign(url, expires, options);
+            String stringToSign = makeStringToSign(host, path, expires, options);
             MessageDigest hasher = MessageDigest.getInstance("MD5");
             hasher.update(stringToSign.getBytes());
             byte[] digest = hasher.digest();
@@ -160,21 +176,19 @@ public class ByteArkV2UrlSigner {
                     .replace('+', '-')
                     .replace('/', '_')
                     .replaceAll("=+$", "");
-        } catch (NoSuchAlgorithmException | MalformedURLException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
 
-    String makeStringToSign(String url, long expires, Map<String, String> options)
-            throws MalformedURLException {
-        URL urlComponents = new URL(url);
+    private String makeStringToSign(String host, String path, long expires, Map<String, String> options) {
 
         StringBuilder linesToSign = new StringBuilder();
         linesToSign.append(options.getOrDefault("method", "GET"));
         linesToSign.append('\n');
-        linesToSign.append(urlComponents.getHost());
+        linesToSign.append(host);
         linesToSign.append('\n');
-        linesToSign.append(options.getOrDefault("path_prefix", urlComponents.getPath()));
+        linesToSign.append(options.getOrDefault("path_prefix", path));
         linesToSign.append('\n');
         linesToSign.append(this.makeCustomPolicyLines(options));
         // already has new line
@@ -194,7 +208,7 @@ public class ByteArkV2UrlSigner {
         return result;
     }
 
-    StringBuilder makeCustomPolicyLines(Map<String, String> options) {
+    private StringBuilder makeCustomPolicyLines(Map<String, String> options) {
         StringBuilder sb = new StringBuilder();
         options.entrySet()
                 .stream()

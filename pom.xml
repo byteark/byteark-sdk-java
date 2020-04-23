@@ -28,6 +28,18 @@
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.23</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.23</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -42,7 +54,14 @@
                 <configuration>
                     <source>8</source>
                     <target>8</target>
-<!--                    <release>8</release>-->
+                    <!--                    <release>8</release>-->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.openjdk.jmh</groupId>
+                            <artifactId>jmh-generator-annprocess</artifactId>
+                            <version>1.23</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>
