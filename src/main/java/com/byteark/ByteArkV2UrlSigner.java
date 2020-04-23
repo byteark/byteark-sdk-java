@@ -34,10 +34,6 @@ public class ByteArkV2UrlSigner {
     }
 
     public String sign(String url, long expires, Map<String, String> options) {
-        if (expires <= 0) {
-            expires = System.currentTimeMillis() / 1000 + defaultAge;
-        }
-
         URL parsedUrl;
         try {
             parsedUrl = new URL(url);
@@ -114,6 +110,10 @@ public class ByteArkV2UrlSigner {
     }
 
     public String makeSignedQueryParams(String host, String path, long expires, Map<String, String> options) {
+        if (expires <= 0) {
+            expires = System.currentTimeMillis() / 1000 + defaultAge;
+        }
+
         if (options==null) {
             options = new HashMap<>();
         } else {
